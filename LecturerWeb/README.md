@@ -10,7 +10,7 @@ api: 'http://localhost:3000/api/' 이부분 변경
 3. npm run build로 dist폴더 갱신(backend로만 구동가능하도록 배포)
 
 
-backend : nodejs(express)
+backend : nodejs(express)   +    DB : mariaDB(db table은 미리 만들어져 있어야 함)
 1. cfg/cfg.js에
 host: 'localhost:3000' 이부분 변경
 
