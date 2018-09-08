@@ -85,6 +85,20 @@
       Card
     },
     created () {
+      const hello = this.hello
+      hello('google').api('me').then(
+        function (json) {
+          console.log("정보: ", json)
+          console.log("이름: ", json.name)
+          console.log("이메일: ", json.email)
+          console.log("썸네일: ", json.thumbnail)
+          console.log("고유id: ", json.id)
+        },
+        function (e) {
+          console.log('me error : ' + e.error.message)
+        }
+      )
+
       this.$http.get(this.$cfg.path.api + 'data/containers')
       .then((response) => {
         this.containers = response.data

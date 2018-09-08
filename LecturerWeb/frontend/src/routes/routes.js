@@ -22,7 +22,8 @@ const routes = [
   },
   {
     path: '/auth/callbackGoogle',
-    component: Login
+    component: Login,
+    redirect: '/auth/login'
   },
   {
     path: '/admin',

@@ -13,21 +13,35 @@
 	   	</tr>
 			<tr>
 				<td>
-					<button style='color: white; background-color: #008CBA' class="btn btn-default" @click="openMyPage()">구글인증하기</button> <br />
+					<button style='color: white; background-color: #008CBA' class="btn btn-default" @click="auth()">구글인증하기</button> <br />
 				</td>
 			</tr>
 		</table>
 	</div>
 </template>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="./hello.all.js"></script>
-
 <script>
 export default {
   methods: {
-    openMyPage () {
-      location.href = "#/admin/overview"
+    auth () {
+      const hello = this.hello
+      hello('google').login({scope: 'email'}).then(function (auth) {
+        hello(auth.network).api('/me').then(function (r) {
+          hello('google').api('me').then(
+            function (json) {
+              console.log("정보: ", json)
+              console.log("이름: ", json.name)
+              console.log("이메일: ", json.email)
+              console.log("썸네일: ", json.thumbnail)
+              console.log("고유id: ", json.id)
+            },
+            function (e) {
+              console.log('me error : ' + e.error.message)
+            }
+          )
+          location.href = "#/admin/overview"
+        })
+      })
     }
   }
 }
