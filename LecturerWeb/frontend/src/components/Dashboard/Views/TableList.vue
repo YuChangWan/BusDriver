@@ -85,19 +85,29 @@
       Card
     },
     created () {
-      const hello = this.hello
+      var tempHttp = this.$http
+      var tempPath = this.$cfg.path.api
+      var hello = this.hello
+      var user_id = null
       hello('google').api('me').then(
         function (json) {
-          console.log("정보: ", json)
-          console.log("이름: ", json.name)
-          console.log("이메일: ", json.email)
-          console.log("썸네일: ", json.thumbnail)
-          console.log("고유id: ", json.id)
+          var body = {
+            user_email: json.email,
+            user_name: json.name
+          }
+          return tempHttp.post(tempPath + 'auth/sign/check', body)
+            .then((res) => {
+              user_id = res.data
+              console.log("find", user_id[0].id)
+            })
         },
         function (e) {
           console.log('me error : ' + e.error.message)
         }
       )
+      .then(() => {
+        console.log("thentest", user_id[0].id)
+      })
 
       this.$http.get(this.$cfg.path.api + 'data/containers')
       .then((response) => {
@@ -107,7 +117,8 @@
     data () {
       return {
         containers: [],
-        con_id: 1,
+        con_id: null,
+        user_id: null,
         txtPost: '',
         ContainerName: '', // add
         ContainerComment: '', // add

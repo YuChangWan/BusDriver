@@ -17,7 +17,7 @@ const VueHello = require('vue-hellojs')
 HelloJs.init({
   google: '143850479596-3bni34pjmno4cu6jf1170fa0jutf3si0.apps.googleusercontent.com'
 }, {
-  redirect_uri: 'auth/callbackGoogle'
+  redirect_uri: 'admin/overview'
 })
 
 Vue.use(VueHello, HelloJs)

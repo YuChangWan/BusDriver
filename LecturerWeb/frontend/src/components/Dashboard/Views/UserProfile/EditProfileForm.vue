@@ -76,9 +76,36 @@
       Card
     },
     created () {
-      const body = {
+      var tempHttp = this.$http
+      var tempPath = this.$cfg.path.api
+      var hello = this.hello
+      var user_id = null
+      var data = this.user_id
+      hello('google').api('me').then(
+        function (json) {
+          var body = {
+            user_email: json.email,
+            user_name: json.name
+          }
+          return tempHttp.post(tempPath + 'auth/sign/check', body)
+            .then((res) => {
+              user_id = res.data
+              console.log("find", user_id[0].id)
+            })
+        },
+        function (e) {
+          console.log('me error : ' + e.error.message)
+        }
+      )
+      .then(() => {
+        data = user_id[0].id
+        console.log("find2", data)
+      })
+
+      var body = {
         id: this.user_id
       }
+
       this.$http.post(this.$cfg.path.api + 'data/lecturers', body)
       .then((response) => {
         this.user = response.data
@@ -103,6 +130,29 @@
       }
     },
     methods: {
+      findId () {
+        var tempHttp = this.$http
+        var tempPath = this.$cfg.path.api
+        var hello = this.hello
+        var user_id = null
+
+        return hello('google').api('me').then(
+          function (json) {
+            var body = {
+              user_email: json.email,
+              user_name: json.name
+            }
+            tempHttp.post(tempPath + 'auth/sign/check', body)
+              .then((res) => {
+                user_id = res.data
+                console.log("find", user_id[0].id)
+              })
+          },
+          function (e) {
+            console.log('me error : ' + e.error.message)
+          }
+        )
+      },
       updateProfile () {
         const body = {
           id: this.user_id,

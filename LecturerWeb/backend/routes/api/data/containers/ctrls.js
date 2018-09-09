@@ -22,10 +22,10 @@ exports.add = (req, res) => {
   var data = [req.body.name, req.body.language, 1, req.body.maximumstudents, req.body.comment];
 
   //shell.cd('~');
-  if(shell.exec('openstack appcontainer create --interactive --security-group global_http --name ' + req.body.name + ' --net network=ff897b78-fece-42ae-9f9a-061204629ab9 ubuntu:16.04').code !== 0) {
+  /*if(shell.exec('openstack appcontainer create --interactive --security-group global_http --name ' + req.body.name + ' --net network=ff897b78-fece-42ae-9f9a-061204629ab9 ubuntu:16.04').code !== 0) {
     shell.echo('Error: command failed');
     shell.exit(1);
-  }
+  }*/
 
   var selectSql = 'select * from containers where lecturer_id = 1';
   var insertSql = 'INSERT INTO containers(name, language, lecturer_id, maximumstudents, comment) VALUES(?,?,?,?,?)';
