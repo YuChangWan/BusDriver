@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const ctrl = require('./ctrls');
 
-router.get('/', ctrl.list);
+router.post('/list', ctrl.list);
 router.post('/', ctrl.add);
 router.post('/del', ctrl.del);
 

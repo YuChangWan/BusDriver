@@ -1,4 +1,6 @@
 아래의 것들을 자신의 환경에 맞게 변경해주어야 동작함 
+각 폴더에서 해야할것
+1. npm install
 
 frontend : Vuejs(vue-cli)
 1. src/main.js에 

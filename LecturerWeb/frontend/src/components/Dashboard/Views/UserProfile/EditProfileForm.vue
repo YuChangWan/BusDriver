@@ -78,9 +78,9 @@
     created () {
       var tempHttp = this.$http
       var tempPath = this.$cfg.path.api
-      var hello = this.hello
-      var user_id = null
-      var data = this.user_id
+      var hello = this.$helloGoogle
+      var userId = null
+      var data = null
       hello('google').api('me').then(
         function (json) {
           var body = {
@@ -89,8 +89,8 @@
           }
           return tempHttp.post(tempPath + 'auth/sign/check', body)
             .then((res) => {
-              user_id = res.data
-              console.log("find", user_id[0].id)
+              userId = res.data
+              console.log("find", userId[0].id)
             })
         },
         function (e) {
@@ -98,28 +98,28 @@
         }
       )
       .then(() => {
-        data = user_id[0].id
-        console.log("find2", data)
-      })
+        data = userId[0].id
+        this.user_id = data
 
-      var body = {
-        id: this.user_id
-      }
+        var body = {
+          id: this.user_id
+        }
 
-      this.$http.post(this.$cfg.path.api + 'data/lecturers', body)
-      .then((response) => {
-        this.user = response.data
-        this.userName = this.user[0].name
-        this.userEmail = this.user[0].email
-        this.userAddress = this.user[0].address
-        this.userCountry = this.user[0].country
-        this.userCity = this.user[0].city
-        this.userAbout_me = this.user[0].about_me
+        this.$http.post(this.$cfg.path.api + 'data/lecturers', body)
+        .then((response) => {
+          this.user = response.data
+          this.userName = this.user[0].name
+          this.userEmail = this.user[0].email
+          this.userAddress = this.user[0].address
+          this.userCountry = this.user[0].country
+          this.userCity = this.user[0].city
+          this.userAbout_me = this.user[0].about_me
+        })
       })
     },
     data () {
       return {
-        user_id: 1,
+        user_id: null,
         userName: '',
         userEmail: '',
         userAddress: '',
@@ -130,29 +130,6 @@
       }
     },
     methods: {
-      findId () {
-        var tempHttp = this.$http
-        var tempPath = this.$cfg.path.api
-        var hello = this.hello
-        var user_id = null
-
-        return hello('google').api('me').then(
-          function (json) {
-            var body = {
-              user_email: json.email,
-              user_name: json.name
-            }
-            tempHttp.post(tempPath + 'auth/sign/check', body)
-              .then((res) => {
-                user_id = res.data
-                console.log("find", user_id[0].id)
-              })
-          },
-          function (e) {
-            console.log('me error : ' + e.error.message)
-          }
-        )
-      },
       updateProfile () {
         const body = {
           id: this.user_id,

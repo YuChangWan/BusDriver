@@ -24,6 +24,39 @@
       columns: Array,
       data: Array
     },
+    data () {
+      return {
+        user_id: null
+      }
+    },
+    created () {
+      var tempHttp = this.$http
+      var tempPath = this.$cfg.path.api
+      var hello = this.$helloGoogle
+      var userId = null
+      var data = null
+
+      hello('google').api('me').then(
+        function (json) {
+          var body = {
+            user_email: json.email,
+            user_name: json.name
+          }
+          return tempHttp.post(tempPath + 'auth/sign/check', body)
+            .then((res) => {
+              userId = res.data
+              console.log("find", userId[0].id)
+            })
+        },
+        function (e) {
+          console.log('me error : ' + e.error.message)
+        }
+      )
+      .then(() => {
+        data = userId[0].id
+        this.user_id = data
+      })
+    },
     methods: {
       hasValue (item, column) {
         return item[column.toLowerCase()] !== 'undefined'
@@ -33,6 +66,7 @@
       },
       sendDel (item) {
         const body = {
+          id: this.user_id,
           con_id: item['id']
         }
         this.$http.post(this.$cfg.path.api + 'data/containers/del', body)

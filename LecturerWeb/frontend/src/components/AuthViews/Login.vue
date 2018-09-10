@@ -26,9 +26,7 @@ export default {
     auth () {
       var tempHttp = this.$http
       var tempPath = this.$cfg.path.api
-      var hello = this.hello
-      var tempthis = this
-      var user_id = ''
+      var hello = this.$helloGoogle
 
       hello('google').login({scope: 'email'}).then(function (auth) {
         hello(auth.network).api('/me').then(function (r) {
@@ -39,9 +37,6 @@ export default {
                 user_name: json.name
               }
               tempHttp.post(tempPath + 'auth/sign', body)
-                .then((res) => {
-                  user_id = res.data
-                })
               location.href = "#/admin/overview"
             },
             function (e) {

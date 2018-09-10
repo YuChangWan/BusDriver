@@ -11,21 +11,19 @@ import axios from 'axios'
 import routes from './routes/routes'
 import cfg from '../static/cfg'
 
-const HelloJs = require('hellojs/dist/hello.all.min.js')
-const VueHello = require('vue-hellojs')
+import helloGoogle from 'hellojs'
 
-HelloJs.init({
+helloGoogle.init({
   google: '143850479596-3bni34pjmno4cu6jf1170fa0jutf3si0.apps.googleusercontent.com'
 }, {
   redirect_uri: 'admin/overview'
 })
 
-Vue.use(VueHello, HelloJs)
-
 if (process.env.NODE_ENV === 'development') cfg.path.api = 'http://localhost:3000/api/'
 
 Vue.prototype.$http = axios
 Vue.prototype.$cfg = cfg
+Vue.prototype.$helloGoogle = helloGoogle
 
 // plugin setup
 Vue.use(VueRouter)

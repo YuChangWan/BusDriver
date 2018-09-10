@@ -87,8 +87,10 @@
     created () {
       var tempHttp = this.$http
       var tempPath = this.$cfg.path.api
-      var hello = this.hello
-      var user_id = null
+      var hello = this.$helloGoogle
+      var userId = null
+      var data = null
+
       hello('google').api('me').then(
         function (json) {
           var body = {
@@ -97,8 +99,8 @@
           }
           return tempHttp.post(tempPath + 'auth/sign/check', body)
             .then((res) => {
-              user_id = res.data
-              console.log("find", user_id[0].id)
+              userId = res.data
+              console.log("find", userId[0].id)
             })
         },
         function (e) {
@@ -106,12 +108,17 @@
         }
       )
       .then(() => {
-        console.log("thentest", user_id[0].id)
-      })
+        data = userId[0].id
+        this.user_id = data
 
-      this.$http.get(this.$cfg.path.api + 'data/containers')
-      .then((response) => {
-        this.containers = response.data
+        var body = {
+          id: this.user_id
+        }
+
+        this.$http.post(this.$cfg.path.api + 'data/containers/list', body)
+        .then((response) => {
+          this.containers = response.data
+        })
       })
     },
     data () {
@@ -138,6 +145,7 @@
           }
         }
         const body = {
+          id: this.user_id,
           name: this.ContainerName,
           language: selectBoxDatas.options[selectBoxDatas.selectedIndex].value,
           maximumstudents: radioBtnDatas[radioBtnLoc].value,
