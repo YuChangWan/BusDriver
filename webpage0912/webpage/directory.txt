@@ -1,0 +1,6 @@
+합계 
+-rw-rw-r-- asdf.c
+-rw-r--r-- hash.c
+-rw-r--r-- hello.c
+-rw-r--r-- hi.c
+-rw-rw-r-- skdjfksjdkfjskd
