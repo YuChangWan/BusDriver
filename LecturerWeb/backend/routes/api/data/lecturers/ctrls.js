@@ -2,8 +2,6 @@
 var mysql_dbc = require('../../../../dbcon/db_con')();
 var connection = mysql_dbc.init();
 
-mysql_dbc.test_open(connection);
-
 exports.info = (req, res) => {
   var id_data = req.body.id;
   //res.send({ success: false, msg: 'list 준비중입니다' });
@@ -22,14 +20,12 @@ exports.mod = (req, res) => {
   var selectSql = 'select * from lecturers where id =' + id_data;
   var updateSql = 'update lecturers' + ' SET address=?, city=?, country=?, about_me=?' + ' where id =' + id_data;
 
-  console.log("rows : " + data);
   connection.query(updateSql, data, function (err, rows) {
     if (err) console.error("err : " + err);
+    console.log("rows : " + data);
   });
+
   connection.query(selectSql, function (err, result) {
-    /*if (err) throw err;
-    console.log(result);
-    */
     if (err) console.error("err : " + err);
     res.send(result);
   });

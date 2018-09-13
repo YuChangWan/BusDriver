@@ -9,9 +9,18 @@
     <tr v-for="item in data">
       <slot :row="item">
         <td v-for="column in columns" v-if="hasValue(item, column)">{{itemValue(item, column)}}</td>
-        <td><button type="submit" class="btn btn-secondary btn-fill float-right" @click.prevent="sendDel(item)">
-          Del This Container
-        </button></td>
+        <td>
+          <td><button style="font-size:14px" type="submit" class="btn btn-primary btn-xs btn-fill float-right" @click.prevent="startContainer(item)">
+            Start
+          </button></td>
+          <td><button style="font-size:14px" type="submit" class="btn btn-warning btn-xs btn-fill float-right" @click.prevent="stopContainer(item)">
+            Stop
+          </button></td>
+          <td><button style="font-size:14px" type="submit" class="btn btn-danger btn-xs btn-fill float-right" @click.prevent="delContainer(item)">
+            Delete
+          </button></td>
+        </td>
+
       </slot>
     </tr>
     </tbody>
@@ -26,7 +35,10 @@
     },
     data () {
       return {
-        user_id: null
+        user_id: null,
+        alertStartMessage: '',
+        alertStopMessage: '',
+        alertDeleteMessage: ''
       }
     },
     created () {
@@ -45,7 +57,6 @@
           return tempHttp.post(tempPath + 'auth/sign/check', body)
             .then((res) => {
               userId = res.data
-              console.log("find", userId[0].id)
             })
         },
         function (e) {
@@ -64,17 +75,51 @@
       itemValue (item, column) {
         return item[column.toLowerCase()]
       },
-      sendDel (item) {
+      startContainer (item) {
         const body = {
           id: this.user_id,
-          con_id: item['id']
+          con_name: item['name'],
+          con_uuid: item['uuid']
+        }
+        this.$http.post(this.$cfg.path.api + 'data/containers/start', body)
+        .then((response) => {
+          this.alertStartMessage = response.data
+        })
+        .then(() => {
+          alert(this.alertStartMessage)
+          window.location.reload()
+        })
+      },
+      stopContainer (item) {
+        const body = {
+          id: this.user_id,
+          con_name: item['name'],
+          con_uuid: item['uuid']
+        }
+        this.$http.post(this.$cfg.path.api + 'data/containers/stop', body)
+        .then((response) => {
+          this.alertStopMessage = response.data
+        })
+        .then(() => {
+          alert(this.alertStopMessage)
+          window.location.reload()
+        })
+      },
+      delContainer (item) {
+        const body = {
+          id: this.user_id,
+          con_name: item['name'],
+          con_id: item['id'],
+          con_uuid: item['uuid']
         }
         this.$http.post(this.$cfg.path.api + 'data/containers/del', body)
         .then((response) => {
-          this.containers = response.data
+          this.alertDeleteMessage = response.data
         })
-        window.location.reload()
-        alert('delete success')
+        .then(() => {
+          alert(this.alertDeleteMessage)
+          window.location.reload()
+        })
       }
     }
   }

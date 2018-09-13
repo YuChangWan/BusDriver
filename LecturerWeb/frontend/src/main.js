@@ -19,7 +19,7 @@ helloGoogle.init({
   redirect_uri: 'admin/overview'
 })
 
-if (process.env.NODE_ENV === 'development') cfg.path.api = 'http://localhost:3000/api/'
+if (process.env.NODE_ENV === 'development') cfg.path.api = 'http://172.30.1.70:80/api/'
 
 Vue.prototype.$http = axios
 Vue.prototype.$cfg = cfg

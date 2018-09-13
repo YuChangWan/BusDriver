@@ -78,7 +78,7 @@
 <script>
   import LTable from 'src/components/UIComponents/Table2.vue'
   import Card from 'src/components/UIComponents/Cards/Card.vue'
-  const tableColumns = ['Name', 'Language', 'Maximumstudents', 'Comment']
+  const tableColumns = ['Name', 'Language', 'Maximumstudents', 'Comment', 'Ip', 'State']
   export default {
     components: {
       LTable,
@@ -100,7 +100,6 @@
           return tempHttp.post(tempPath + 'auth/sign/check', body)
             .then((res) => {
               userId = res.data
-              console.log("find", userId[0].id)
             })
         },
         function (e) {
@@ -154,6 +153,9 @@
         this.$http.post(this.$cfg.path.api + 'data/containers', body)
           .then((res) => {
             this.containers = res.data
+          })
+          .then(() => {
+            alert(this.ContainerName + ' create!')
           })
       }
     }

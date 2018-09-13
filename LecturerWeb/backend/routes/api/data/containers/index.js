@@ -3,6 +3,8 @@ const ctrl = require('./ctrls');
 
 router.post('/list', ctrl.list);
 router.post('/', ctrl.add);
+router.post('/start', ctrl.start);
+router.post('/stop', ctrl.stop);
 router.post('/del', ctrl.del);
 
 router.all('*', (req, res) => {

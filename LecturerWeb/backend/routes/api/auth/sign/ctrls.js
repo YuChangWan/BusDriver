@@ -2,8 +2,6 @@ var mysql_dbc = require('../../../../dbcon/db_con')();
 var connection = mysql_dbc.init();
 //var hello = require('hellojs/dist/hello.all.min.js');
 
-mysql_dbc.test_open(connection);
-
 exports.check = (req, res) => {
   var id_data;
   var email_data = req.body.user_email;
