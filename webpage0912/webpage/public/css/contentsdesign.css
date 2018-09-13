@@ -1,0 +1,72 @@
+#jb-container {
+        width: 90%;
+		height: 90%;
+        margin: 0px auto;
+        padding: 20px;
+        
+      }
+      #jb-header {
+		height: 100%;
+		width: 98.5%;
+        padding: 10px;
+        margin-bottom: 10px;
+		float: right;
+		border: 1px solid #bcbcbc;
+        
+      }
+	  #jb-body {
+		height: 100%;
+		width: 98.5%;
+        padding: 10px;
+        margin-bottom: 10px;
+		border: 1px solid #bcbcbc;
+        
+      }
+      #jb-sidebar-left {
+        width: 15%;
+		height: 100%;
+        padding: 10px;
+        margin-right: 5px;
+        margin-bottom: 10px;
+        float: left;
+        border: 1px solid #bcbcbc;
+      }
+      #jb-content {
+        width: 76%;
+		height: 100%;
+        padding: 20px;
+        margin-bottom: 20px;
+        float: right;
+
+      }
+
+      #jb-footer {
+        padding: 1px;
+        border: 1px solid #bcbcbc;
+		float: right;
+		display: none;
+		position:absolute;
+
+      }
+	  
+	  #codepage {
+	    width: 100%;
+        height: 400px;
+        font-size: 18px;
+		font-family: "Time New Roman", arial;
+		position:relative;
+		}
+	  #linkpage {
+		width: 100%;
+        height: 400px;
+        font-size: 13px;
+		font-family: "Time New Roman", arial;
+		position:absolute;
+		display: none;
+	  }
+	  #toolbar {
+		width : 20%;
+		height: 100%;
+		float: right;
+		
+		}*{padding:0; margin:0;}
