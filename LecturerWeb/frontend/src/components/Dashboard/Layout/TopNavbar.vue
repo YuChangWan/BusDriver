@@ -16,9 +16,9 @@
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a href="#/auth/login" class="nav-link">
+            <button type="submit" class="btn btn-info btn-fill float-right" @click.prevent="doLogout">
               로그아웃
-            </a>
+            </button>
           </li>
         </ul>
       </div>
@@ -39,6 +39,15 @@
       }
     },
     methods: {
+      doLogout () {
+        var hello = this.$helloGoogle
+        hello('google').logout().then(function () {
+          alert('logout success')
+          location.href = "#/auth/login"
+        }, {force: true}, function (e) {
+          alert('Signed out error: ' + e.error.message)
+        })
+      },
       capitalizeFirstLetter (string) {
         return string.charAt(0).toUpperCase() + string.slice(1)
       },

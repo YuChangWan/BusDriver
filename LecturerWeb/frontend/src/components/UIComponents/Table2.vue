@@ -69,6 +69,15 @@
       })
     },
     methods: {
+      swalSuccess (msg) {
+        return this.$swal({
+          icon: 'success',
+          // button: false,
+          title: '성공',
+          text: msg,
+          timer: 2000
+        })
+      },
       hasValue (item, column) {
         return item[column.toLowerCase()] !== 'undefined'
       },
@@ -86,7 +95,9 @@
           this.alertStartMessage = response.data
         })
         .then(() => {
-          alert(this.alertStartMessage)
+          return this.swalSuccess(this.alertStartMessage)
+        })
+        .then(() => {
           window.location.reload()
         })
       },
@@ -101,7 +112,9 @@
           this.alertStopMessage = response.data
         })
         .then(() => {
-          alert(this.alertStopMessage)
+          return this.swalSuccess(this.alertStopMessage)
+        })
+        .then(() => {
           window.location.reload()
         })
       },
@@ -117,7 +130,9 @@
           this.alertDeleteMessage = response.data
         })
         .then(() => {
-          alert(this.alertDeleteMessage)
+          return this.swalSuccess(this.alertDeleteMessage)
+        })
+        .then(() => {
           window.location.reload()
         })
       }

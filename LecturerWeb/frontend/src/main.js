@@ -10,7 +10,7 @@ import axios from 'axios'
 // router setup
 import routes from './routes/routes'
 import cfg from '../static/cfg'
-
+import swal from 'sweetalert'
 import helloGoogle from 'hellojs'
 
 helloGoogle.init({
@@ -24,6 +24,7 @@ if (process.env.NODE_ENV === 'development') cfg.path.api = 'http://172.30.1.70:8
 Vue.prototype.$http = axios
 Vue.prototype.$cfg = cfg
 Vue.prototype.$helloGoogle = helloGoogle
+Vue.prototype.$swal = swal
 
 // plugin setup
 Vue.use(VueRouter)

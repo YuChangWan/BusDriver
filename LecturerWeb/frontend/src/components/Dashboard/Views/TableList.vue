@@ -134,6 +134,15 @@
       }
     },
     methods: {
+      swalSuccess (msg) {
+        return this.$swal({
+          icon: 'success',
+          // button: false,
+          title: '성공',
+          text: msg,
+          timer: 2000
+        })
+      },
       sendPost () {
         var selectBoxDatas = document.getElementById("selectBox")
         var radioBtnDatas = document.getElementsByName("radio_btn")
@@ -155,7 +164,7 @@
             this.containers = res.data
           })
           .then(() => {
-            alert(this.ContainerName + ' create!')
+            return this.swalSuccess(this.ContainerName + ' create!')
           })
       }
     }

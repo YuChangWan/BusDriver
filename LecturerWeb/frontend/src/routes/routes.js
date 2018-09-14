@@ -8,7 +8,6 @@ import Login from '../components/AuthViews/Login.vue'
 import Overview from 'src/components/Dashboard/Views/Overview.vue'
 import UserProfile from 'src/components/Dashboard/Views/UserProfile.vue'
 import TableList from 'src/components/Dashboard/Views/TableList.vue'
-import Typography from 'src/components/Dashboard/Views/Typography.vue'
 
 const routes = [
   {
@@ -44,11 +43,6 @@ const routes = [
         path: 'table-list',
         name: 'Table List',
         component: TableList
-      },
-      {
-        path: 'typography',
-        name: 'Typography',
-        component: Typography
       }
     ]
   },

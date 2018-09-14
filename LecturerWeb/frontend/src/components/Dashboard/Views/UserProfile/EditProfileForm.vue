@@ -130,6 +130,15 @@
       }
     },
     methods: {
+      swalSuccess (msg) {
+        return this.$swal({
+          icon: 'success',
+          // button: false,
+          title: '성공',
+          text: msg,
+          timer: 2000
+        })
+      },
       updateProfile () {
         const body = {
           id: this.user_id,
@@ -150,7 +159,9 @@
           this.userCity = this.user[0].city
           this.userAbout_me = this.user[0].about_me
         })
-        alert('Update success')
+        .then(() => {
+          return this.swalSuccess('Profile Update Success')
+        })
       }
     }
   }

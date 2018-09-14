@@ -9,7 +9,7 @@
               <p class="card-category">Compute, Network, Storage를 사용자 UI로 사용할 수 있습니다.</p>
             </template>
             <div>
-              <img style="width:100%" src="static/img/openstackservice.png" alt="Openstack Service Image" />
+              <img style="width:100%" src="static/img/openstackService.png" alt="Openstack Service Image" />
             </div>
           </card>
         </div>

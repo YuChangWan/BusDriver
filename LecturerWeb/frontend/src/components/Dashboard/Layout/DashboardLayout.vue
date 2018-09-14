@@ -14,10 +14,6 @@
         <i class="nc-icon nc-notes"></i>
         <p>컨테이너 관리</p>
       </sidebar-link>
-      <sidebar-link to="/admin/typography">
-        <i class="nc-icon nc-paper-2"></i>
-        <p>개발환경 요청 게시판</p>
-      </sidebar-link>
     </side-bar>
     <div class="main-panel">
       <top-navbar></top-navbar>
