@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <title>BusDriver-CodingPage</title>
+	<link href="css/jquery-linedtextarea.css" type="text/css" rel="stylesheet" />
+	<link href="css/contentsdesign.css" type="text/css" rel="stylesheet" />
+	<link href="css/modal.css" type="text/css" rel="stylesheet" />
+	<link href="css/jquery.treeview.css" type="text/css" rel="stylesheet" />
+	
+  </head>
+	<body>
+		<div id="jb-container">
+		  <div id="jb-header">
+			<div id="toolbar">
+				<input type="image" src="images/execute.png" id = "compile" name = "Submit" value = "Submit" style="width: 30%; height: 90%;">
+				<input type="image" src="images/save.png" style="width: 30%; height: 90%;">
+				<input type="image" src="images/help.png" id = "help" style="width: 30%; height: 90%;">
+			</div>
+		  </div>
+		  
+		  <div id="jb-sidebar-left">	
+			<ul id="browser" class="filetree treeview-famfamfam">
+				<li><span class="folder" value="201324509">201324509</span>
+					<ul id="browser2" class="filetree treeview-famfamfam">
+					</ul>
+				</li>
+			</ul>
+			<button class="modalLink">new file</button>
+			<div id="modalLayer">
+			  <div class="modalContent">
+				<input type="text" id="filename"/>
+				<input type="submit" id="newfile"></button>
+				<button type="button">close</button>
+			  </div>
+			</div>
+		  </div>
+		  
+		  <div id="jb-content">		
+			<textarea id="codepage" name="codepage"></textarea>
+		  </div>
+		</div>
+
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/enabletab.js"></script>
+	<script type="text/javascript" src="js/jquery.cookie.js"></script>
+	<script type="text/javascript" src="js/jquery.treeview.js"></script>
+	<script type="text/javascript" src="js/directorymodal.js"></script>
+	<script type="text/javascript" src="js/socketio.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			//this is tree view construction
+			$("#browser").treeview({
+				toggle: function() {
+					console.log("%s was toggled.", $(this).find(">span").text());
+				}
+			});
+
+			getDirectoryList(); //get directory list from server and it's in directorymodal.js
+			
+			$('#compile').click(function() {
+				var codedata = $("#codepage").val();
+				$.post("/code",{code: codedata},function(data) {
+					alert(data);
+					$("#codepage").text(data);
+				});
+			});
+			
+			var socket = io();
+			console.log('server created');
+			// Send 버튼이 클릭되면
+			$("#help").click(function(e) {
+			  e.preventDefault();
+
+			  // 서버로 메시지를 전송한다.
+			  socket.emit("help", {userid: "201324509"});
+			  console.log('user emitted: 201324509');
+			});
+		});
+	</script>
+	
+  </body>
+</html>

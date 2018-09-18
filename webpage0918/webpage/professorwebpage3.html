@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <title>BusDriver-ManagingPage</title>
+	<link href="css/jquery-linedtextarea.css" type="text/css" rel="stylesheet" />
+	<link href="css/contentsdesign.css" type="text/css" rel="stylesheet" />
+	<link href="css/modal.css" type="text/css" rel="stylesheet" />
+	<link href="css/jquery.treeview.css" type="text/css" rel="stylesheet" />
+	
+  </head>
+	<body>
+		<div id="jb-container">
+		  <div id="jb-header">
+			<div id="toolbar">
+				<input type="image" src="images/execute.png" id = "compile" style="width: 23%; height: 90%;">
+				<input type="image" src="images/save.png" id = "save" style="width: 23%; height: 90%;">
+				<input type="image" src="images/logout.png" id = "logout" style="width: 23%; height: 90%;">
+			</div>
+		  </div>
+		  
+		  <div id="jb-sidebar-left">	
+			<ul id="browser" class="filetree treeview-famfamfam">
+				<li><span class="folder" id="201324509">201324509</span>
+					<ul id="browser2" class="filetree treeview-famfamfam">
+					</ul>
+				</li>
+				<li><span class="folder" id="201324452">201324452</span>
+					<ul id="browser2" class="filetree treeview-famfamfam">
+					</ul>
+				</li>
+			</ul>
+			
+			
+			<button class="modalLink">new file</button>
+			<div id="modalLayer">
+			  <div class="modalContent">
+				<input type="text" id="filename"/>
+				<input type="submit" id="newfile"></button>
+				<button type="button">close</button>
+			  </div>
+			</div>
+		  </div>
+		  
+		  <div id="jb-content">		
+			<textarea id="codepage" name="codepage"></textarea>
+		  </div>
+		</div>
+
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/enabletab.js"></script>
+	<script type="text/javascript" src="js/jquery.cookie.js"></script>
+	<script type="text/javascript" src="js/jquery.treeview.js"></script>
+	<script type="text/javascript" src="js/directorymodal.js"></script>
+	<script type="text/javascript" src="js/socketio.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			//this is tree view construction
+			$("#browser").treeview({
+				toggle: function() {
+					console.log("%s was toggled.", $(this).find(">span").text());
+				}
+			});
+
+			getDirectoryList(); //get directory list from server and it's in directorymodal.js
+			
+			$('#compile').click(function() {
+				var codedata = $("#codepage").val();
+				$.post("/code",{code: codedata},function(data) {
+					alert(data);
+					$("#codepage").text(data);
+				});
+			});
+			/*
+			$('#save').click(function() {
+				var tab_id = $('ul.tabs li.current').attr("value");
+				var codedata = $("#"+tab_id).val();
+				console.log(codedata);
+				$.post("/save",{code: codedata},function() {
+				});
+			});
+			*/
+			var socket = io();
+			console.log('professor web socket created');
+			// 서버로부터의 메시지가 수신되면
+			socket.on("help", function(data) {
+				console.log('professor on');
+			  $("#201324509").css("background-color","red");
+			});
+		});
+	</script>
+	
+  </body>
+</html>
