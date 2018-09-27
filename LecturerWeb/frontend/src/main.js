@@ -14,9 +14,9 @@ import swal from 'sweetalert'
 import helloGoogle from 'hellojs'
 
 helloGoogle.init({
-  google: '143850479596-3bni34pjmno4cu6jf1170fa0jutf3si0.apps.googleusercontent.com'
+  google: 'yourGoogleAPI.com'
 }, {
-  redirect_uri: 'admin/overview'
+  redirect_uri: 'yourRedirect_URI'
 })
 
 if (process.env.NODE_ENV === 'development') cfg.path.api = 'http://172.30.1.70:80/api/'
