@@ -6,6 +6,13 @@ frontend : Vuejs(vue-cli)
 1. src/main.js에 
 if (process.env.NODE_ENV === 'development') cfg.path.api = 'http://localhost:3000/api/' 이부분 변경
 
+helloGoogle.init({
+  google: 'yourGoogleAPI.com'
+}, {
+  redirect_uri: 'yourRedirect_URI'
+})
+에서 자신의 googleAPI와 redirect_uri 작성
+
 2. static/cfg.js에 
 api: 'http://localhost:3000/api/' 이부분 변경
 
