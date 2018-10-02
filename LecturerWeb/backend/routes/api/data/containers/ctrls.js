@@ -29,7 +29,15 @@ exports.add = (req, res) => {
   var analysisUuidLoc;
   var analysisUuidArr = '';
 
-  shell.exec('openstack appcontainer create --interactive --security-group global_http --name ' + req.body.name + ' --net network=ff897b78-fece-42ae-9f9a-061204629ab9 ubuntu:16.04', function (error, stdout, stderr) {
+  var openStackCreateCmd = '';
+
+  if(req.body.language == 'C/C++') {
+    openStackCreateCmd = 'openstack appcontainer create --security-group busdriver_http --name ' + req.body.name + ' --net network=ff897b78-fece-42ae-9f9a-061204629ab9 busdriver/busdrivercpp';
+  } else if(req.body.language == 'Python') {
+    openStackCreateCmd = 'openstack appcontainer create --security-group busdriver_http --name ' + req.body.name + ' --net network=ff897b78-fece-42ae-9f9a-061204629ab9 busdriver/busdriverpython';
+  }
+
+  shell.exec(openStackCreateCmd, function (error, stdout, stderr) {
     analysisCode = stdout;
     if (error !== null) {
       analysisArr = analysisCode.split("\n");
@@ -85,7 +93,7 @@ exports.start = (req, res) => {
       }
 
       analysisIpArr = analysisArr[analysisIpBeforeLoc + 1].split(",");
-      subIp = analysisIpArr[0].substring(2, analysisIpArr[0].length - 3);
+      subIp = analysisIpArr[0].substring(2, analysisIpArr[0].length - 2);
       res.send(con_name + " : " + subIp + " start success!");
 
       var start_data = [subIp, 'Start'];
@@ -102,7 +110,7 @@ exports.stop = (req, res) => {
   var con_uuid_data = req.body.con_uuid;
   var start_data = ['Stop'];
   var updateSql = 'update containers' + ' SET state=?' + ' where uuid = ' + "'" + con_uuid_data + "'";
-  //shell.cd('~');
+
   if(shell.exec('openstack appcontainer stop ' + "'" + con_uuid_data + "'").code !== 0) {
     shell.echo('Error: command failed');
     shell.exit(1);
@@ -113,13 +121,6 @@ exports.stop = (req, res) => {
     });
     res.send(con_name + " stop success")
   }
-
-  //var selectSql = 'select * from containers where lecturer_id = ' + user_id;
-
-  /*connection.query(selectSql, function (err, result) {
-    if (err) console.error("err : " + err);
-    res.send(result);
-  });*/
 };
 
 exports.del = (req, res) => {
@@ -127,7 +128,7 @@ exports.del = (req, res) => {
   var con_name = req.body.con_name;
   var con_id_data = req.body.con_id;
   var con_uuid_data = req.body.con_uuid;
-  //var selectSql = 'select * from containers where lecturer_id = ' + user_id;
+
   var deleteSql = 'delete from containers' + ' where id =' + con_id_data;
 
   if(shell.exec('openstack appcontainer delete ' + "'" + con_uuid_data + "'").code !== 0) {
@@ -140,9 +141,4 @@ exports.del = (req, res) => {
     });
     res.send(con_name + " delete success!")
   }
-  /*
-  connection.query(selectSql, function (err, result) {
-    if (err) console.error("err : " + err);
-    res.send(result);
-  });*/
 };
