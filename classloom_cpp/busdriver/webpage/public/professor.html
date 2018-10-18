@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <title>BusDriver-CodingPage</title>
+	<link href="css/jquery-linedtextarea.css" type="text/css" rel="stylesheet" />
+	<link href="css/contentsdesign.css" type="text/css" rel="stylesheet" />
+	<link href="css/modal.css" type="text/css" rel="stylesheet" />
+	<link href="css/jquery.treeview.css" type="text/css" rel="stylesheet" />
+	<style>
+		ul.tabs{
+			height: 40px;
+			margin: 0px;
+			padding: 0px;
+			list-style: none;
+		}
+		ul.tabs li{
+			background: none;
+			color: #222;
+			display: inline-block;
+			padding: 10px 15px;
+			cursor: pointer;
+		}
+
+		ul.tabs li.current{
+			background: #ededed;
+			color: #222;
+		}
+
+		.tab-content{
+			height: 350px;
+			display: none;
+		}
+
+		.tab-content.current{
+			display: inherit;
+		}
+		
+		.btn {
+		  background-color: #ddd;
+		  border: none;
+		  color: black;
+		  padding: 8px 16px;
+		  text-align: center;
+		  font-size: 16px;
+		  margin: 4px 2px;
+		  transition: 0.3s;
+		  cursor: pointer;
+		}
+
+		.btn:hover {
+		  background-color: #3e8e41;
+		  color: white;
+		}
+
+	</style>
+  </head>
+	<body>
+		<div id="jb-container">
+			<div id="jb-header">
+				<div id="jb-logo">
+					<center><input type="image" src="images/TeamBusDriver.png" height="50px" id="logo"/></center>
+				</div>
+				<div id="jb-classroom">
+					<center>언어 : <a>C &nbsp; &nbsp; &nbsp; &nbsp;</a> 강의자 : <a id="professorname"></a></center>
+				</div>
+				<div id="toolbar">
+					<button class="btn" id="modalLink">New File</button>
+					<button class="btn" id="deleteFile">Delete File</button>
+					<button class="btn" id="compile">Execute</button>
+					<button class="btn" id="save">Save</button>
+					<form method="get" action="/process/logout" style="float: right">
+						<button type="submit" value="logout" class="btn" >logout</button>
+					</form>
+				</div>
+		 	</div>
+		 
+		 	<div id="modalLayer">
+                        	<div class="modalContent">
+                                	<input type="text" id="filename"/>
+                              		<input type="submit" id="newfile"></button>
+                                	<button type="button">close</button>
+                          	</div>
+                        </div>
+ 
+		 	<div id="jb-sidebar-left">	
+				<ul id="browser" class="filetree treeview-famfamfam">
+	
+				</ul>
+			</div>
+		  
+			<div id="jb-content">		
+				<ul class="tabs"></ul>
+				<div class="tabarea"></div>
+		  	</div>
+		</div>
+
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/enabletab.js"></script>
+	<script type="text/javascript" src="js/jquery.cookie.js"></script>
+	<script type="text/javascript" src="js/jquery.treeview.js"></script>
+	<script type="text/javascript" src="js/directorymodal.js"></script>
+	<script type="text/javascript" src="js/socketio.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+		
+			var myID = "";
+			var socket = io(); //HyoEDIT
+
+			$.post("/getMyId",function(data) {
+				myID = data;
+				modalF(myID, socket); //HyoEDIT
+				$("#professorname").text(myID);
+				socket.emit("socketAccess", {userid: myID}); //send myid socket (send IO DO)
+			});
+			
+			//this is tree view construction
+			$("#browser").treeview({
+				toggle: function() {
+					console.log("%s was toggled.", $(this).find(">span").text());
+				}
+			});
+
+			//get directory list from server and it's in directorymodal.js
+			$.post( "/StuDirectory", function( data ) { //리눅스로 학생여부와 ID정보를 전달한다
+				var darray = data.split('\n'); //리눅스로부터 ls -l의 결과를 가져온다. 해당 파일에는 디렉토리인지 파일인지 판단하는 코드 (dwx---dwx)와 파일 이름이 있다 이걸 각 항마다 배열에 저장한다
+				var newarray = new Array();
+				var temparray;	
+				for (i = 1; i < darray.length-1; i++){
+					if(darray[i].indexOf('d') == 0) { //디렉토리일 경우
+						//create directory
+						temparray = darray[i].split(' '); //디렉토리
+						var branches = $("<li><span class='folder' value='"+temparray[1]+"'>"+temparray[1]+"</span><ul id='"+temparray[1]+"' class='filetree treeview-famfamfam'></ul></li>").appendTo("#browser"); //name append
+						
+						$("#browser").treeview({
+							add: branches
+						}); //myID 이름을 바탕으로 디렉토리 리스트에 추가한다.
+						getStudentList(temparray[1]);
+						
+					}
+					
+				}
+				
+			});			
+			
+			$('#compile').click(function() {
+				var tab_id = $('ul.tabs li.current').attr("value");
+				var codedata = $("textarea[id='"+tab_id+"']").val();
+				console.log(codedata);
+				$.post("/code",{userid: myID, filename: tab_id, code: codedata},function(data) {
+					alert(data);
+				});
+			});
+			
+			$('#save').click(function() {
+				var tab_id = $('ul.tabs li.current').attr("value");
+				var codedata = $("textarea[id='"+tab_id+"']").val();
+				console.log(codedata);
+				$.post("/save",{userid: myID, filename: tab_id, code: codedata},function() {
+				});
+			});
+			
+			//socket
+			console.log('server created');
+			socket.on('help', function(data) { //help button click, turn red...(hyo)
+			    var helpStudent = data.userid;
+			    var helpFile = data.filename;
+			    console.log("Server received code : "+helpStudent);
+
+			    $("span[value='"+helpStudent+"']").css("background-color","red");
+			    $("li[name='"+helpStudent+"']+li[value='"+helpFile+"']").css("background-color","red");
+			    
+		 	});
+
+			socket.on('complete', function(data) { //help button click, turn red...(hyo)
+			    var helpStudent = data.userid;
+			    var helpFile = data.filename;
+			    console.log("Server received code : "+helpStudent);
+
+			    $("span[value='"+helpStudent+"']").css("background-color","#ffffff");
+			    $("li[name='"+helpStudent+"']+li[value='"+helpFile+"']").css("background-color","#ffffff");
+			    
+		 	});
+
+			$(document).on("keydown","textarea", function(e) {//엔터키가 눌러지면 실시간 전송하는 코드.
+				if(e.keyCode === 13) { // enter was pressed
+					// prevent the focus lose
+					//e.preventDefault();
+					var textareaName = $(this).attr("name");
+					var stufilename = $(this).prop("id");
+					var newtext = $(this).val();
+					socket.emit("newtext", {userid: textareaName, filename: stufilename, textvalue: newtext}); //HyoEDIT
+				}
+			});
+
+			socket.on('newFileCreated', function(data) { //HyoEDIT
+			    var userid = data.userid;
+			    var filename = data.filename;
+			    console.log("I received : "+userid+ " ");
+			    console.log("I received file : "+filename);
+
+			    var branches = $("<li name='"+userid+"' value='"+filename+"'><span class='file'>"+filename+"</span></li>").appendTo("#"+userid);
+				$("#browser").treeview({
+					add: branches
+				});
+		 	});
+			
+			$(document).on("click", "ul.tabs li", function(){ //tab 클릭 시 그 탭의 textarea를 보여줌
+				var tab_id = $(this).attr("value");
+				$('ul.tabs li').removeClass('current');
+				$('.tab-content').removeClass('current');
+
+				$(this).addClass('current');
+				$("textarea[id='"+tab_id+"']").addClass('current');
+			});
+			
+			$(document).on("click",".close",function() { //tab 닫기버튼 클릭시 탭을 닫음.
+				var tab_id = $(this).attr("value");
+				var lock = false;
+				console.log($('ul.tabs li').length);
+				
+				if($('ul.tabs li.current').attr("value") == tab_id) {
+					$('ul.tabs li').removeClass('current');
+					$('.tab-content').removeClass('current');
+					lock = true;
+				}
+				$("ul.tabs li[value='"+tab_id+"']").remove();
+				$("textarea[id='"+tab_id+"']").remove();
+				if(lock) {
+					$("ul.tabs li:first-child").addClass('current');
+					var firstchild = $("ul.tabs li:first-child").attr("value");
+					$("textarea[id='"+firstchild+"']").addClass('current');
+				}
+			});
+		});
+	</script>
+	
+  </body>
+</html>
